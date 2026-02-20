@@ -6,7 +6,6 @@
     <title>MK Transport Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Firebase SDKs (v9 Compat) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -16,14 +15,15 @@
         body { font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         .urdu { font-family: 'Noto Sans Urdu', serif; }
         .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        #loader.hidden { display: none; }
     </style>
 </head>
 <body class="bg-slate-50 pb-24">
 
-    <!-- Loading Screen -->
+    <!-- Loading Screen (Starts Visible) -->
     <div id="loader" class="fixed inset-0 bg-slate-900 z-[300] flex flex-col items-center justify-center text-white">
         <div class="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="urdu">رابطہ ہو رہا ہے...</p>
+        <p class="urdu">تصدیق ہو رہی ہے...</p>
     </div>
 
     <!-- Auth Section -->
@@ -32,27 +32,24 @@
             <i data-lucide="truck" size="64"></i>
         </div>
         <h1 class="text-3xl font-black mb-2 italic">MK TRANSPORT</h1>
-        <p class="text-slate-400 mb-10 urdu">کلاؤڈ لاگ ان</p>
-        
+        <p class="text-slate-400 mb-10 urdu">لاگ ان کریں</p>
         <button onclick="login()" id="login-btn" class="w-full max-w-xs bg-white text-black py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-xl active:scale-95 transition-all">
             <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" class="w-6 h-6"> 
-            <span id="login-text">Google se Login Karein</span>
+            <span>Google se Login Karein</span>
         </button>
-        
-        <div id="error-msg" class="mt-4 text-red-400 text-xs hidden"></div>
     </div>
 
     <!-- PIN Screen -->
     <div id="pin-section" class="fixed inset-0 bg-slate-900 z-[150] hidden flex flex-col items-center justify-center p-6 text-white text-center">
         <div class="bg-slate-800 p-8 rounded-[2.5rem] w-full max-w-sm border border-slate-700 shadow-2xl">
             <i data-lucide="lock" class="mx-auto mb-4 text-blue-400" size="40"></i>
-            <h2 class="text-xl font-bold mb-6 urdu">سیکیورٹی پن درج کریں</h2>
+            <h2 class="text-xl font-bold mb-6 urdu">پن کوڈ</h2>
             <input type="password" id="pin-input" placeholder="****" maxlength="4" class="w-full bg-slate-900 rounded-xl p-4 text-center text-4xl mb-4 outline-none border border-slate-700 text-blue-400 tracking-[0.5rem]">
             <p id="user-display" class="text-[10px] text-slate-500 uppercase tracking-widest"></p>
         </div>
     </div>
 
-    <!-- App UI -->
+    <!-- Main UI -->
     <div id="main-app" class="hidden">
         <header class="bg-blue-700 text-white p-6 rounded-b-[2.5rem] shadow-lg sticky top-0 z-50">
             <div class="flex justify-between items-center mb-4">
@@ -62,11 +59,11 @@
                 </div>
                 <button onclick="logout()" class="p-2 bg-white/10 rounded-xl"><i data-lucide="log-out" size="20"></i></button>
             </div>
-            <div class="bg-white text-slate-900 p-6 rounded-[2.5rem] shadow-md">
-                <p class="text-[10px] font-bold text-slate-400 uppercase text-right urdu">کل خالص منافع</p>
+            <div class="bg-white text-slate-900 p-6 rounded-[2.5rem] shadow-md text-right">
+                <p class="text-[10px] font-bold text-slate-400 uppercase urdu">کل منافع</p>
                 <div class="flex items-baseline justify-end gap-1" dir="ltr">
                     <span class="text-sm font-bold text-blue-600">Rs.</span>
-                    <span id="total-profit" class="text-4xl font-black text-blue-800 tracking-tighter">0</span>
+                    <span id="total-profit" class="text-4xl font-black text-blue-800">0</span>
                 </div>
             </div>
         </header>
@@ -74,12 +71,12 @@
         <main class="p-4 max-w-md mx-auto">
             <div id="tab-dashboard" class="tab-ui space-y-4">
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Misbah (50%)</p>
+                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 text-center">
+                        <p class="text-[9px] font-bold text-slate-400">MISBAH</p>
                         <p id="share-m" class="text-lg font-black text-blue-600">Rs. 0</p>
                     </div>
-                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
-                        <p class="text-[9px] font-bold text-slate-400 uppercase">Tariq (50%)</p>
+                    <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 text-center">
+                        <p class="text-[9px] font-bold text-slate-400">TARIQ</p>
                         <p id="share-t" class="text-lg font-black text-blue-600">Rs. 0</p>
                     </div>
                 </div>
@@ -94,7 +91,7 @@
                         <input type="number" id="f-income" placeholder="Income" class="w-full p-4 bg-blue-50/50 rounded-2xl text-blue-700 font-bold" required>
                         <input type="number" id="f-expense" placeholder="Expense" class="w-full p-4 bg-red-50/50 rounded-2xl text-red-700 font-bold" required>
                     </div>
-                    <button type="submit" id="save-btn" class="w-full bg-blue-700 text-white py-5 rounded-2xl font-black shadow-lg">SAVE TO CLOUD</button>
+                    <button type="submit" id="save-btn" class="w-full bg-blue-700 text-white py-5 rounded-2xl font-black shadow-lg">SAVE DATA</button>
                 </form>
             </div>
 
@@ -102,9 +99,9 @@
         </main>
 
         <nav class="fixed bottom-6 left-6 right-6 glass p-4 rounded-[2.5rem] flex justify-around items-center z-50 shadow-2xl border border-slate-200">
-            <button onclick="showTab('dashboard')" id="nav-dashboard" class="nav-btn p-2 text-blue-600"><i data-lucide="layout-dashboard"></i></button>
+            <button onclick="showTab('dashboard')" id="nav-dashboard" class="p-2 text-blue-600"><i data-lucide="layout-dashboard"></i></button>
             <button onclick="showTab('add')" id="nav-add" class="p-4 bg-blue-600 text-white rounded-full -mt-12 shadow-xl border-4 border-slate-50"><i data-lucide="plus"></i></button>
-            <button onclick="showTab('reports')" id="nav-reports" class="nav-btn p-2 text-slate-400"><i data-lucide="list"></i></button>
+            <button onclick="showTab('reports')" id="nav-reports" class="p-2 text-slate-400"><i data-lucide="list"></i></button>
         </nav>
     </div>
 
@@ -125,41 +122,52 @@
 
         lucide.createIcons();
 
-        // Mobile Login Handler
-        auth.getRedirectResult().then((result) => {
-            document.getElementById('loader').classList.add('hidden');
-            if (result.user) console.log("Login Success");
-        }).catch(err => {
-            document.getElementById('loader').classList.add('hidden');
-            const errorDiv = document.getElementById('error-msg');
-            errorDiv.innerText = "Error: " + err.message;
-            errorDiv.classList.remove('hidden');
-        });
-
-        auth.onAuthStateChanged(user => {
-            document.getElementById('loader').classList.add('hidden');
-            if (user) {
-                document.getElementById('auth-section').classList.add('hidden');
-                document.getElementById('pin-section').classList.remove('hidden');
-                document.getElementById('user-display').innerText = user.email;
-            } else {
+        // 1. Set Persistence (Sessions will stay active)
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                // 2. Check for redirect result on load
+                return auth.getRedirectResult();
+            })
+            .then((result) => {
+                // Loader hides after we know auth state
+                checkAuthState();
+            })
+            .catch((error) => {
+                console.error("Auth Error:", error);
+                document.getElementById('loader').classList.add('hidden');
                 document.getElementById('auth-section').classList.remove('hidden');
-                document.getElementById('main-app').classList.add('hidden');
-            }
-        });
+            });
+
+        function checkAuthState() {
+            auth.onAuthStateChanged(user => {
+                document.getElementById('loader').classList.add('hidden');
+                if (user) {
+                    // Logged in
+                    document.getElementById('auth-section').classList.add('hidden');
+                    document.getElementById('pin-section').classList.remove('hidden');
+                    document.getElementById('user-display').innerText = user.email;
+                } else {
+                    // Not logged in
+                    document.getElementById('auth-section').classList.remove('hidden');
+                    document.getElementById('main-app').classList.add('hidden');
+                    document.getElementById('pin-section').classList.add('hidden');
+                }
+            });
+        }
 
         function login() {
-            const btnText = document.getElementById('login-text');
-            btnText.innerText = "Redirecting...";
             const provider = new firebase.auth.GoogleAuthProvider();
-            // Important: Adding scope and forcing redirect
-            provider.addScope('profile');
-            provider.addScope('email');
+            provider.setCustomParameters({ prompt: 'select_account' });
             auth.signInWithRedirect(provider);
         }
 
         function logout() {
-            if(confirm("Logout?")) auth.signOut().then(() => location.reload());
+            if(confirm("Log out?")) {
+                auth.signOut().then(() => {
+                    localStorage.clear();
+                    location.reload();
+                });
+            }
         }
 
         function showTab(t) {
@@ -182,7 +190,6 @@
             const btn = document.getElementById('save-btn');
             btn.disabled = true;
             btn.innerText = "SAVING...";
-
             const payload = {
                 date: document.getElementById('f-date').value,
                 truck: document.getElementById('f-truck').value.toUpperCase(),
@@ -191,13 +198,12 @@
                 expense: parseFloat(document.getElementById('f-expense').value) || 0,
                 ts: firebase.firestore.FieldValue.serverTimestamp()
             };
-
             try {
                 await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('trips').add(payload);
                 document.getElementById('trip-form').reset();
                 showTab('reports');
-            } catch(e) { alert("Error saving data."); }
-            finally { btn.disabled = false; btn.innerText = "SAVE TO CLOUD"; }
+            } catch(e) { alert("Error: Rules check karein."); }
+            finally { btn.disabled = false; btn.innerText = "SAVE DATA"; }
         });
 
         function loadData() {
