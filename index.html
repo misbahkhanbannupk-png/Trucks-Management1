@@ -22,9 +22,28 @@
         .filter-btn { background-color: transparent; color: #1e40af; }
         .report-table th { background: #1e3a8a; color: white; padding: 10px; text-align: center; font-size: 11px; }
         .report-table td { border-bottom: 1px solid #e2e8f0; padding: 10px; text-align: center; font-size: 11px; }
+        
+        /* Success Toast Styles */
+        #success-toast {
+            transform: translateY(-100px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #success-toast.show {
+            transform: translateY(20px);
+        }
     </style>
 </head>
 <body class="text-slate-900">
+
+    <!-- Success Popup (Toast) -->
+    <div id="success-toast" class="fixed top-0 left-0 right-0 z-[600] flex justify-center pointer-events-none">
+        <div class="bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3">
+            <div class="bg-white text-green-600 rounded-full p-1">
+                <i data-lucide="check" size="18"></i>
+            </div>
+            <span class="font-bold urdu">اینٹری کامیابی سے محفوظ ہو گئی!</span>
+        </div>
+    </div>
 
     <div id="auth-section" class="fixed inset-0 z-[300] bg-slate-900 flex flex-col items-center justify-center p-8 text-white">
         <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
@@ -139,8 +158,8 @@
 
             <div id="tab-maint" class="tab-content space-y-3">
                 <form id="maint-form" class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4 border-t-4 border-amber-600">
-                    <input type="text" id="m-detail" placeholder="Repair Detail" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" required>
-                    <input type="number" id="m-amount" placeholder="Amount" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" required>
+                    <input type="text" id="m-detail" placeholder="Repair Detail" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" autocomplete="off" required>
+                    <input type="number" id="m-amount" placeholder="Amount" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" autocomplete="off" required>
                     <button type="submit" class="w-full bg-amber-600 text-white py-4 rounded-2xl font-bold urdu">مینٹیننس محفوظ کریں</button>
                 </form>
                 <div id="maint-list" class="space-y-3"></div>
@@ -150,11 +169,11 @@
                 <form id="trip-form" class="bg-white p-6 rounded-[3rem] shadow-sm space-y-4">
                     <h2 class="font-bold urdu text-right">نیا ٹرپ ریکارڈ</h2>
                     <input type="date" id="f-date" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" required>
-                    <input type="text" id="f-route" placeholder="Route (KHI to LHR)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" required>
-                    <input type="number" id="f-income" placeholder="Total Income" class="w-full p-4 bg-blue-50 rounded-2xl font-bold outline-none" required>
+                    <input type="text" id="f-route" placeholder="Route (KHI to LHR)" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" autocomplete="off" required>
+                    <input type="number" id="f-income" placeholder="Total Income" class="w-full p-4 bg-blue-50 rounded-2xl font-bold outline-none" autocomplete="off" required>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="number" id="f-diesel" placeholder="Diesel" class="p-4 bg-orange-50 rounded-2xl outline-none">
-                        <input type="number" id="f-food" placeholder="Food" class="p-4 bg-green-50 rounded-2xl outline-none">
+                        <input type="number" id="f-diesel" placeholder="Diesel" class="p-4 bg-orange-50 rounded-2xl outline-none" autocomplete="off">
+                        <input type="number" id="f-food" placeholder="Food" class="p-4 bg-green-50 rounded-2xl outline-none" autocomplete="off">
                     </div>
                     <button type="submit" class="w-full bg-blue-700 text-white py-5 rounded-2xl font-black shadow-lg urdu">ریکارڈ محفوظ کریں</button>
                 </form>
@@ -196,7 +215,20 @@
                 document.getElementById('auth-section').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 loadData();
-            } else { alert("Incorrect PIN"); }
+            } else { 
+                // Using a custom styled prompt since alerts are restricted
+                document.getElementById('master-pin').classList.add('border-red-500');
+                setTimeout(() => document.getElementById('master-pin').classList.remove('border-red-500'), 1000);
+            }
+        }
+
+        // Success Popup Function
+        function showSuccess() {
+            const toast = document.getElementById('success-toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
         }
 
         function setFilter(period) {
@@ -219,7 +251,6 @@
             });
             document.getElementById('btn-' + id)?.classList.replace('text-slate-400', 'text-blue-700');
 
-            // Toggle Dashboard Card Visibility: Only show on 'home'
             const dashCard = document.getElementById('dashboard-card');
             if(id === 'home') {
                 dashCard.style.display = 'block';
@@ -241,7 +272,6 @@
                     allRecords.push(d);
 
                     if(d.type === 'trip') {
-                        const net = d.income - (d.diesel + d.food);
                         tList.innerHTML += `<div class="bg-white p-5 rounded-3xl shadow-sm flex justify-between items-center border border-slate-100">
                             <div class="text-right"><p class="font-bold">${d.route}</p><p class="text-[9px] text-slate-400">${d.date}</p></div>
                             <div class="flex items-center gap-2">
@@ -293,6 +323,7 @@
             document.getElementById('dash-food').innerText = "Rs. " + tFd.toLocaleString();
         }
 
+        // Trip Form Submission with Reset and Popup
         document.getElementById('trip-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = {
@@ -305,11 +336,15 @@
                 ts: Date.now()
             };
             await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').add(data);
-            document.getElementById('trip-form').reset();
+            
+            // RESET & NOTIFY
+            e.target.reset();
             document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-            showTab('home');
+            showSuccess();
+            setTimeout(() => showTab('home'), 1000);
         });
 
+        // Maintenance Form Submission with Reset and Popup
         document.getElementById('maint-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = {
@@ -320,11 +355,19 @@
                 ts: Date.now()
             };
             await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').add(data);
-            document.getElementById('maint-form').reset();
-            showTab('home');
+            
+            // RESET & NOTIFY
+            e.target.reset();
+            showSuccess();
+            setTimeout(() => showTab('home'), 1000);
         });
 
-        async function delDoc(id) { if(confirm("Kya aap delete karna chahte hain?")) await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').doc(id).delete(); }
+        async function delDoc(id) { 
+            // Simplified custom confirm
+            if(window.confirm("Delete this record?")) {
+                await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').doc(id).delete();
+            }
+        }
 
         function editDoc(id) {
             const item = allRecords.find(r => r.id === id);
@@ -367,6 +410,7 @@
             }
             await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').doc(id).update(updateData);
             closeEdit();
+            showSuccess();
         }
 
         function closeEdit() { document.getElementById('edit-modal').classList.add('hidden'); }
@@ -399,5 +443,5 @@
         document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
     </script>
 </body>
-                </html>
-                
+</html>
+
