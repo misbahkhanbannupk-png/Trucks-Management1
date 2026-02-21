@@ -26,7 +26,6 @@
 </head>
 <body class="text-slate-900">
 
-    <!-- Login -->
     <div id="auth-section" class="fixed inset-0 z-[300] bg-slate-900 flex flex-col items-center justify-center p-8 text-white">
         <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center mb-6 shadow-2xl">
             <i data-lucide="truck" size="40"></i>
@@ -36,13 +35,10 @@
         <button onclick="checkPin()" class="w-64 bg-blue-600 py-4 rounded-2xl font-bold urdu">لاگ ان کریں</button>
     </div>
 
-    <!-- Edit Modal -->
     <div id="edit-modal" class="fixed inset-0 z-[500] bg-black/50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 space-y-4">
             <h3 class="font-bold urdu text-right text-lg border-b pb-2">ریکارڈ ایڈٹ کریں</h3>
-            <div id="edit-form-container" class="space-y-3">
-                <!-- Dynamic form fields -->
-            </div>
+            <div id="edit-form-container" class="space-y-3"></div>
             <div class="flex gap-2">
                 <button onclick="closeEdit()" class="flex-1 bg-slate-100 py-3 rounded-xl font-bold urdu">کینسل</button>
                 <button id="save-edit-btn" class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold urdu">اپ ڈیٹ کریں</button>
@@ -50,11 +46,10 @@
         </div>
     </div>
 
-    <!-- HTML Report Overlay -->
     <div id="report-preview" class="fixed inset-0 z-[400] bg-white hidden overflow-y-auto p-4 pb-24">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <button onclick="closeReport()" class="bg-slate-100 p-2 rounded-full text-slate-600"><i data-lucide="arrow-right"></i></button>
-            <h2 class="font-black italic text-blue-800">DETAILED REPORT (3 MONTHS)</h2>
+            <h2 class="font-black italic text-blue-800 uppercase">Detailed Report</h2>
             <div class="w-10"></div>
         </div>
         <div class="space-y-6">
@@ -88,7 +83,6 @@
         </div>
     </div>
 
-    <!-- Main App -->
     <div id="main-app" class="hidden min-h-screen pb-32">
         <header class="bg-blue-700 text-white p-6 rounded-b-[3.5rem] shadow-xl sticky top-0 z-50">
             <div class="flex justify-between items-center mb-4">
@@ -96,40 +90,39 @@
                 <button onclick="location.reload()" class="p-2 bg-white/10 rounded-full"><i data-lucide="refresh-ccw" size="18"></i></button>
             </div>
 
-            <!-- Date Filter Selector -->
-            <div class="bg-white/20 p-1 rounded-2xl flex mb-6">
-                <button onclick="setFilter('1w')" id="f-1w" class="filter-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all urdu">1 ہفتہ</button>
-                <button onclick="setFilter('1m')" id="f-1m" class="filter-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all urdu active">1 مہینہ</button>
-                <button onclick="setFilter('3m')" id="f-3m" class="filter-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all urdu">3 مہینے</button>
-            </div>
-            
-            <div class="bg-white text-slate-900 p-6 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+            <div id="dashboard-card" class="bg-white text-slate-900 p-6 rounded-[2.5rem] shadow-2xl relative overflow-hidden transition-all">
                 <div class="absolute top-2 left-4 px-2 py-1 bg-blue-100 rounded-lg text-[8px] font-bold text-blue-700 uppercase" id="current-filter-label">1 MONTH PROFIT</div>
                 <p class="text-[10px] font-bold text-slate-400 urdu text-right mt-2">خالص منافع</p>
                 <h2 class="text-4xl font-black text-blue-900 text-right">Rs. <span id="dash-profit">0</span></h2>
+                
                 <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
                     <div class="text-right">
-                        <p class="text-[8px] text-slate-400 font-bold">MISBAH SHARE</p>
+                        <p class="text-[8px] text-slate-400 font-bold uppercase">Misbah Share</p>
                         <p id="share-m" class="text-sm font-black text-blue-600">Rs. 0</p>
                     </div>
                     <div class="text-right border-r border-slate-100 pr-4">
-                        <p class="text-[8px] text-slate-400 font-bold">TARIQ SHARE</p>
+                        <p class="text-[8px] text-slate-400 font-bold uppercase">Tariq Share</p>
                         <p id="share-t" class="text-sm font-black text-blue-600">Rs. 0</p>
                     </div>
                 </div>
             </div>
+
+            <div class="bg-white/20 p-1 rounded-2xl flex mt-6">
+                <button onclick="setFilter('1w')" id="f-1w" class="filter-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all urdu">1 ہفتہ</button>
+                <button onclick="setFilter('1m')" id="f-1m" class="filter-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all urdu active">1 مہینہ</button>
+                <button onclick="setFilter('3m')" id="f-3m" class="filter-btn flex-1 py-2 rounded-xl text-xs font-bold transition-all urdu">3 مہینے</button>
+            </div>
         </header>
 
         <main class="p-4 max-w-md mx-auto space-y-4">
-            <!-- Home -->
             <div id="tab-home" class="tab-content active space-y-4">
                 <div class="grid grid-cols-2 gap-3">
                     <div class="bg-white p-5 rounded-3xl border-b-4 border-orange-500 shadow-sm text-center">
-                        <p class="text-[10px] font-bold text-slate-400">SELECTED DIESEL</p>
+                        <p class="text-[10px] font-bold text-slate-400">TOTAL DIESEL</p>
                         <p id="dash-diesel" class="text-lg font-black">0</p>
                     </div>
                     <div class="bg-white p-5 rounded-3xl border-b-4 border-green-500 shadow-sm text-center">
-                        <p class="text-[10px] font-bold text-slate-400">SELECTED FOOD</p>
+                        <p class="text-[10px] font-bold text-slate-400">TOTAL FOOD</p>
                         <p id="dash-food" class="text-lg font-black">0</p>
                     </div>
                 </div>
@@ -139,13 +132,11 @@
                 </button>
             </div>
 
-            <!-- History -->
             <div id="tab-history" class="tab-content space-y-3">
-                <h3 class="font-bold urdu text-right text-slate-500 px-2 text-sm">پچھلے 3 مہینے کے ٹرپس</h3>
+                <h3 class="font-bold urdu text-right text-slate-500 px-2 text-sm">ٹرپس کی تاریخ</h3>
                 <div id="trips-list" class="space-y-3"></div>
             </div>
 
-            <!-- Maintenance -->
             <div id="tab-maint" class="tab-content space-y-3">
                 <form id="maint-form" class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4 border-t-4 border-amber-600">
                     <input type="text" id="m-detail" placeholder="Repair Detail" class="w-full p-4 bg-slate-50 rounded-2xl outline-none" required>
@@ -155,7 +146,6 @@
                 <div id="maint-list" class="space-y-3"></div>
             </div>
 
-            <!-- Add Trip -->
             <div id="tab-add" class="tab-content">
                 <form id="trip-form" class="bg-white p-6 rounded-[3rem] shadow-sm space-y-4">
                     <h2 class="font-bold urdu text-right">نیا ٹرپ ریکارڈ</h2>
@@ -172,7 +162,7 @@
         </main>
 
         <nav class="fixed bottom-6 left-6 right-6 bg-white/95 p-3 rounded-[2.5rem] flex justify-around items-center z-[200] shadow-2xl border border-slate-100">
-            <button onclick="showTab('home')" class="nav-btn p-3 text-slate-400" id="btn-home"><i data-lucide="home"></i></button>
+            <button onclick="showTab('home')" class="nav-btn p-3 text-blue-700" id="btn-home"><i data-lucide="home"></i></button>
             <button onclick="showTab('history')" class="nav-btn p-3 text-slate-400" id="btn-history"><i data-lucide="layout-list"></i></button>
             <button onclick="showTab('add')" class="p-5 bg-blue-600 text-white rounded-full -mt-16 shadow-xl border-8 border-slate-50"><i data-lucide="plus" size="28"></i></button>
             <button onclick="showTab('maint')" class="nav-btn p-3 text-slate-400" id="btn-maint"><i data-lucide="wrench"></i></button>
@@ -209,20 +199,6 @@
             } else { alert("Incorrect PIN"); }
         }
 
-        async function cleanupOldData(snap) {
-            const now = Date.now();
-            const batch = db.batch();
-            let hasDeletions = false;
-            snap.forEach(doc => {
-                const d = doc.data();
-                if (d.ts && (now - d.ts) > NINETY_DAYS_MS) {
-                    batch.delete(doc.ref);
-                    hasDeletions = true;
-                }
-            });
-            if (hasDeletions) await batch.commit();
-        }
-
         function setFilter(period) {
             currentFilter = period;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -237,14 +213,24 @@
         function showTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.add('text-slate-400'));
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('text-blue-700');
+                b.classList.add('text-slate-400');
+            });
             document.getElementById('btn-' + id)?.classList.replace('text-slate-400', 'text-blue-700');
+
+            // Toggle Dashboard Card Visibility: Only show on 'home'
+            const dashCard = document.getElementById('dashboard-card');
+            if(id === 'home') {
+                dashCard.style.display = 'block';
+            } else {
+                dashCard.style.display = 'none';
+            }
         }
 
         function loadData() {
             db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records')
             .orderBy('ts', 'desc').onSnapshot(snap => {
-                cleanupOldData(snap);
                 allRecords = [];
                 const tList = document.getElementById('trips-list');
                 const mList = document.getElementById('maint-list');
@@ -259,7 +245,6 @@
                         tList.innerHTML += `<div class="bg-white p-5 rounded-3xl shadow-sm flex justify-between items-center border border-slate-100">
                             <div class="text-right"><p class="font-bold">${d.route}</p><p class="text-[9px] text-slate-400">${d.date}</p></div>
                             <div class="flex items-center gap-2">
-                                <div class="text-right"><p class="font-black text-green-600">Rs. ${net}</p></div>
                                 <button onclick="editDoc('${d.id}')" class="p-2 text-blue-300"><i data-lucide="edit-3" size="14"></i></button>
                                 <button onclick="delDoc('${d.id}')" class="p-2 text-red-200"><i data-lucide="trash-2" size="14"></i></button>
                             </div>
@@ -267,7 +252,7 @@
                     } else {
                         mList.innerHTML += `<div class="bg-amber-50 p-4 rounded-2xl flex justify-between items-center border border-amber-100">
                             <div class="text-right"><p class="font-bold">${d.detail}</p><p class="text-[9px] text-amber-500">${d.date}</p></div>
-                            <div class="flex items-center gap-2"><p class="font-black text-amber-700">-${d.amount}</p>
+                            <div class="flex items-center gap-2">
                                 <button onclick="editDoc('${d.id}')" class="p-2 text-amber-400"><i data-lucide="edit-2" size="14"></i></button>
                                 <button onclick="delDoc('${d.id}')" class="p-2 text-amber-200"><i data-lucide="x" size="16"></i></button>
                             </div>
@@ -283,7 +268,7 @@
             const now = Date.now();
             let filterMs = 30 * 24 * 60 * 60 * 1000;
             if(currentFilter === '1w') filterMs = 7 * 24 * 60 * 60 * 1000;
-            if(currentFilter === '3m') filterMs = NINETY_DAYS_MS;
+            if(currentFilter === '3m') filterMs = 90 * 24 * 60 * 60 * 1000;
 
             let tInc = 0, tDsl = 0, tFd = 0, tMaint = 0;
 
@@ -322,7 +307,7 @@
             await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').add(data);
             document.getElementById('trip-form').reset();
             document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-            showTab('history');
+            showTab('home');
         });
 
         document.getElementById('maint-form').addEventListener('submit', async (e) => {
@@ -336,9 +321,10 @@
             };
             await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').add(data);
             document.getElementById('maint-form').reset();
+            showTab('home');
         });
 
-        async function delDoc(id) { if(confirm("Kya aap waqai delete karna chahte hain?")) await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').doc(id).delete(); }
+        async function delDoc(id) { if(confirm("Kya aap delete karna chahte hain?")) await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('records').doc(id).delete(); }
 
         function editDoc(id) {
             const item = allRecords.find(r => r.id === id);
@@ -353,15 +339,12 @@
                     <div class="flex gap-2">
                         <input type="number" id="edit-diesel" value="${item.diesel}" class="flex-1 p-3 bg-slate-50 rounded-xl outline-none border">
                         <input type="number" id="edit-food" value="${item.food}" class="flex-1 p-3 bg-slate-50 rounded-xl outline-none border">
-                    </div>
-                `;
+                    </div>`;
             } else {
                 container.innerHTML = `
                     <input type="text" id="edit-detail" value="${item.detail}" class="w-full p-3 bg-slate-50 rounded-xl outline-none border">
-                    <input type="number" id="edit-amount" value="${item.amount}" class="w-full p-3 bg-slate-50 rounded-xl outline-none border">
-                `;
+                    <input type="number" id="edit-amount" value="${item.amount}" class="w-full p-3 bg-slate-50 rounded-xl outline-none border">`;
             }
-
             document.getElementById('save-edit-btn').onclick = () => saveEdit(id, item.type);
             document.getElementById('edit-modal').classList.remove('hidden');
         }
@@ -393,14 +376,13 @@
             const trips = allRecords.filter(r => r.type === 'trip');
             tBody.innerHTML = trips.map(t => `
                 <tr>
-                    <td>${t.date.split('-').slice(1).join('/')}</td>
+                    <td>${t.date}</td>
                     <td>${t.route}</td>
                     <td>${t.income}</td>
                     <td>${t.diesel}</td>
                     <td>${t.food}</td>
                     <td class="font-bold text-green-700">${t.income - (t.diesel + t.food)}</td>
-                </tr>
-            `).join('');
+                </tr>`).join('');
 
             const mBody = document.getElementById('rep-maint-body');
             const maints = allRecords.filter(r => r.type === 'maint');
@@ -409,9 +391,7 @@
                     <td>${m.date}</td>
                     <td>${m.detail}</td>
                     <td class="font-bold text-red-600">-${m.amount}</td>
-                </tr>
-            `).join('');
-
+                </tr>`).join('');
             document.getElementById('report-preview').classList.remove('hidden');
         }
 
@@ -419,5 +399,5 @@
         document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
     </script>
 </body>
-</html>
-
+                </html>
+                
